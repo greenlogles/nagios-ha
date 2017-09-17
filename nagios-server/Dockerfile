@@ -37,7 +37,7 @@ RUN  cd /tmp/ && wget -q https://github.com/sni/mod_gearman/archive/v$MOD_GEARMA
 		    tar -xzf /tmp/mod_gearman-$MOD_GEARMAN_VERSION.tar.gz && cd /tmp/mod_gearman-$MOD_GEARMAN_VERSION/ && \
 		    sed '/PKG_CHECK_MODULES(NAEMON,\ \[naemon >= 0.8\])/d' -i configure.ac && ./autogen.sh && \
 		    LDFLAGS=-L/usr/local/lib/ CPPFLAGS="-I/usr/local/include/" ./configure --prefix=/opt/nagios --with-user=nagios --disable-naemon-neb-module --disable-nagios3-neb-module  --with-init-dir=/etc/init.d/ && \
-		    make all && cd && rm -rf /tmp/mod_gearman*
+		    make all && make install && cd && rm -rf /tmp/mod_gearman*
 
 
 

@@ -2,7 +2,7 @@ FROM ubuntu:14.04
 
 MAINTAINER Alexandr shut <alexandr.shut@gmail.com>
 
-ENV NAGIOS_PLUGINS_VERSION='2.2.1' GEARMAN_VERSION='1.1.17'
+ENV NAGIOS_PLUGINS_VERSION='2.2.1' GEARMAN_VERSION='1.1.17' MOD_GEARMAN_VERSION='3.0.5'
 
 RUN apt-get update && apt-get install -y -q  wget \
                     build-essential \
@@ -18,9 +18,16 @@ RUN apt-get update && apt-get install -y -q  wget \
 		    && rm -rf /var/lib/apt/lists/*
 
 # compile gearman and libgearman
-RUN  cd /tmp && wget -q https://github.com/gearman/gearmand/releases/download/$GEARMAN_VERSION/gearmand-$GEARMAN_VERSION.tar.gz -O /tmp/gearmand-$GEARMAN_VERSION.tar.gz \
+RUN  useradd --system nagios && cd /tmp && wget -q https://github.com/gearman/gearmand/releases/download/$GEARMAN_VERSION/gearmand-$GEARMAN_VERSION.tar.gz -O /tmp/gearmand-$GEARMAN_VERSION.tar.gz \
 		    && tar -xzf gearmand-$GEARMAN_VERSION.tar.gz && cd  gearmand-$GEARMAN_VERSION/ \
 		    && ./configure --enable-ssl  && make all && make install && cd && rm -rf /tmp/gearmand*
+
+# compile mod_gearman
+RUN  cd /tmp/ && wget -q https://github.com/sni/mod_gearman/archive/v$MOD_GEARMAN_VERSION.tar.gz -O /tmp/mod_gearman-$MOD_GEARMAN_VERSION.tar.gz && \
+                    tar -xzf /tmp/mod_gearman-$MOD_GEARMAN_VERSION.tar.gz && cd /tmp/mod_gearman-$MOD_GEARMAN_VERSION/ && \
+                    sed '/PKG_CHECK_MODULES(NAEMON,\ \[naemon >= 0.8\])/d' -i configure.ac && ./autogen.sh && \
+                    LDFLAGS=-L/usr/local/lib/ CPPFLAGS="-I/usr/local/include/" ./configure --prefix=/opt/nagios --with-user=nagios --disable-naemon-neb-module --disable-nagios3-neb-module  --with-init-dir=/etc/init.d/ && \
+                    make all && cd && rm -rf /tmp/mod_gearman*
 
 # compile nagios plugins
 RUN cd /tmp; wget -q https://github.com/nagios-plugins/nagios-plugins/releases/download/release-$NAGIOS_PLUGINS_VERSION/nagios-plugins-$NAGIOS_PLUGINS_VERSION.tar.gz && \

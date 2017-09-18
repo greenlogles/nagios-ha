@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y -q  wget \
 # compile gearman and libgearman
 RUN  useradd --system nagios && cd /tmp && wget -q https://github.com/gearman/gearmand/releases/download/$GEARMAN_VERSION/gearmand-$GEARMAN_VERSION.tar.gz -O /tmp/gearmand-$GEARMAN_VERSION.tar.gz \
 		    && tar -xzf gearmand-$GEARMAN_VERSION.tar.gz && cd  gearmand-$GEARMAN_VERSION/ \
-		    && ./configure --enable-ssl  && make all && make install && cd && rm -rf /tmp/gearmand*
+		    && ./configure --enable-ssl  && make all && make install && cd && rm -rf /tmp/gearmand* && echo "/usr/local/lib" > /etc/ld.so.conf.d/libgearman.conf && ldconfig
 
 # compile mod_gearman
 RUN  cd /tmp/ && wget -q https://github.com/sni/mod_gearman/archive/v$MOD_GEARMAN_VERSION.tar.gz -O /tmp/mod_gearman-$MOD_GEARMAN_VERSION.tar.gz && \

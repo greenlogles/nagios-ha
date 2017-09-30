@@ -9,6 +9,9 @@ if [ ! -z "$GEARMAN_SERVERS" ]; then
 	CMD="$CMD --server=$GEARMAN_SERVERS"
 fi
 
+if [ "$DEBUG" == "true"  ]; then
+	sed -i "s|debug=0|debug=1|g" $GEARMAN_WORKER_CONF
+fi
 #if [ ! -z "$GEARMAN_SEPARATED_HOSTGROUPS" ]; then
 #	echo "hostgroups=$GEARMAN_SEPARATED_HOSTGROUPS" >> $MOD_GEARMAN_CONF
 #fi

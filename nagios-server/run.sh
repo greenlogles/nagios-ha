@@ -18,7 +18,7 @@ fi
 
 echo "result_queue=check_results_`hostname`" >> $MOD_GEARMAN_CONF
 
-mkdir -p /opt/nagios/var/spool/checkresults
+mkdir -p /opt/nagios/var/spool/checkresults /opt/nagios/var/rw
 chown nagios: -R /opt/nagios/var/
 
 

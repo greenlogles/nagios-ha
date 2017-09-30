@@ -1,0 +1,25 @@
+version: '3'
+services:
+  gearman-server:
+    image: "gearman-server"
+    build:
+      context: ./gearman-server/
+    ports:
+     - "4730:4730"
+  gearman-worker01:
+    image: "gearman-worker"
+    build:                  
+      context: ./gearman-worker/
+    environment:
+     - GEARMAN_SERVERS=gearman-server
+     - DEBUG=true
+  nagios-server:
+    image: nagios-server
+    build:                  
+      context: ./nagios-server/
+    environment:
+     - GEARMAN_SERVERS=gearman-server
+    volumes:
+     - /docker/var:/opt/nagios/var
+
+

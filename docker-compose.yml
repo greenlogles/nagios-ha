@@ -8,6 +8,8 @@ services:
      - "4730:4730"
   gearman-worker01:
     image: "gearman-worker"
+    depends_on:
+     - gearman-server
     build:                  
       context: ./gearman-worker/
     environment:
@@ -15,11 +17,24 @@ services:
      - DEBUG=true
   nagios-server:
     image: nagios-server
+    depends_on:
+     - gearman-server
     build:                  
       context: ./nagios-server/
     environment:
      - GEARMAN_SERVERS=gearman-server
     volumes:
      - /docker/var:/opt/nagios/var
+#     - /docker/etc/nagios.cfg:/opt/nagios/etc/nagios.cfg
+  nagios-ui:
+    image: nagios-ui
+    depends_on:
+     - nagios-server
+    ports:
+     - "8080:80"
+    volumes:
+     - /docker/var:/opt/nagios/var
+     - /docker/etc:/opt/nagios/etc
+
 
 

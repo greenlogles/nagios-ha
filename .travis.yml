@@ -12,7 +12,7 @@ env:
 before_script:
   - env | sort
   - cd "$COMPONENT"
-  - image="nagios-ha:${COMPONENT}"
+  - image="greenlogles/nagios-ha:${COMPONENT}"
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 
 script:

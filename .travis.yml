@@ -4,6 +4,10 @@ services: docker
 install:
 - git clone https://github.com/greenlogles/nagios-ha.git ~/nagios-ha
 
+env:
+  - COMPONENT=nagios-server
+  - COMPONENT=gearman-server
+  - COMPONENT=gearman-worker
 
 before_script:
   - env | sort

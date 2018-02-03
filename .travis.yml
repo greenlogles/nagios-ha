@@ -19,4 +19,5 @@ script:
   - travis_retry docker build -t "$image" .
 
 after_script:
+  - docker push "$image"
   - docker images

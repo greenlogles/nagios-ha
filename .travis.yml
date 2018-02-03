@@ -9,7 +9,7 @@ before_script:
   - env | sort
   - cd "$COMPONENT"
   - image="nagios-ha:${COMPONENT}"
-  - docker login
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 
 script:
   - travis_retry docker build -t "$image" .

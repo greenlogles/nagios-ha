@@ -1,25 +1,25 @@
 version: '3'
 services:
   gearman-server:
-    image: "gearman-server"
+    image: "greenlogles/nagios-ha:gearman-server"
     build:
       context: ./gearman-server/
     ports:
      - "4730:4730"
   gearman-worker01:
-    image: "gearman-worker"
+    image: "greenlogles/nagios-ha:gearman-worker"
     depends_on:
      - gearman-server
-    build:                  
+    build:
       context: ./gearman-worker/
     environment:
      - GEARMAN_SERVERS=gearman-server
      - DEBUG=true
   nagios-server:
-    image: nagios-server
+    image: "greenlogles/nagios-ha:nagios-server"
     depends_on:
      - gearman-server
-    build:                  
+    build:
       context: ./nagios-server/
     environment:
      - GEARMAN_SERVERS=gearman-server
@@ -27,7 +27,7 @@ services:
      - /docker/var:/opt/nagios/var
 #     - /docker/etc/nagios.cfg:/opt/nagios/etc/nagios.cfg
   nagios-ui:
-    image: nagios-ui
+    image: "greenlogles/nagios-ha:nagios-ui"
     depends_on:
      - nagios-server
     ports:
@@ -35,6 +35,3 @@ services:
     volumes:
      - /docker/var:/opt/nagios/var
      - /docker/etc:/opt/nagios/etc
-
-
-

@@ -1,0 +1,18 @@
+language: bash
+services: docker
+
+install:
+- git clone https://github.com/greenlogles/nagios-ha.git ~/nagios-ha
+
+
+before_script:
+  - env | sort
+  - cd "$COMPONENT"
+  - image="nagios-ha:${COMPONENT}"
+  - docker login
+
+script:
+  - travis_retry docker build -t "$image" .
+
+after_script:
+  - docker images
